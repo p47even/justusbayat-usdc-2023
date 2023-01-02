@@ -27,14 +27,15 @@
         "Results": []
     };
 
-    //iterate through books
+    //check if searchTerm is valid
     if (searchTerm != null && searchTerm != ""){
-        for (var STOInd = 0; STOInd < scannedTextObj.length; STOInd++){
+        //iterate through books
+        for (var STOInd = 0; STOInd < scannedTextObj.length; STOInd++){ 
             var content = scannedTextObj[STOInd].Content;
 
             //iterate through content and add matching entries to results
             for (var i = 0; i < content.length; i++){
-                if (content[i].Text.includes(searchTerm)){
+                if (content[i].Text.includes(searchTerm)){ //if found
                     result.Results.push(
                         formatResult(scannedTextObj[STOInd].ISBN,content[i])
                     )
@@ -50,7 +51,7 @@
  * Returns object containing all relevant information for result.
  * @param {string} ISBN - A string containing the ISBN of the book.
  * @param {object} contentLine - The entry in Content containing the appropriate Page, Line, and Text. 
- * @returns {object} - An set of key-value pairs containing the appropriate ISBN, page, and text.
+ * @returns {object} - A set of key-value pairs containing the appropriate ISBN, page, and text.
  * */ 
 function formatResult(ISBN, contentLine){
     return {
@@ -134,6 +135,14 @@ const pangramIn = [
         ] 
     }
 
+]
+
+const bookOfNothingIn = [
+    {
+        "Title": "The Book of Nothing",
+        "ISBN": "0000000000000",
+        "Content": [] 
+    }
 ]
 
 const emptyIn = []
@@ -229,6 +238,14 @@ const emptyOut = {
     "SearchTerm": "",
     "Results": []
 }
+
+const emptyOutWithSearch = {
+    "SearchTerm": "anything",
+    "Results": []
+}
+
+
+
 
 /*
  _   _ _   _ ___ _____   _____ _____ ____ _____ ____  
@@ -336,12 +353,22 @@ if (JSON.stringify(emptyOut) === JSON.stringify(test9result)) {
     console.log("Received:", test9result);
 }
 
-/** Test empty input and search term. */
-const test10result = findSearchTermInBooks("", emptyIn);
-if (JSON.stringify(emptyOut) === JSON.stringify(test10result)) {
+/** Test book with no content. */
+const test10result = findSearchTermInBooks("anything", bookOfNothingIn);
+if (JSON.stringify(emptyOutWithSearch) === JSON.stringify(test10result)) {
     console.log("PASS: Test 10");
 } else {
     console.log("FAIL: Test 10");
-    console.log("Expected:", emptyOut);
+    console.log("Expected:", emptyOutWithSearch);
     console.log("Received:", test10result);
+}
+
+/** Test blank input. */
+const test11result = findSearchTermInBooks("", emptyIn);
+if (JSON.stringify(emptyOut) === JSON.stringify(test11result)) {
+    console.log("PASS: Test 11");
+} else {
+    console.log("FAIL: Test 11");
+    console.log("Expected:", emptyOut);
+    console.log("Received:", test11result);
 }
